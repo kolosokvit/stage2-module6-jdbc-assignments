@@ -28,7 +28,22 @@ public class SimpleJDBCRepository {
     private static final String findAllUserSQL = "SELECT * FROM myusers";
 
     public Long createUser() {
-        throw new UnsupportedOperationException("method isn't implemented");
+        try {
+            connection = CustomDataSource.getInstance().getConnection();
+            ps = connection.prepareStatement(createUserSQL);
+            String userFirstName = "Tom";
+            String userLastName = "Peterson";
+            int userAge = 29;
+            ps.setString(1, userFirstName);
+            ps.setString(2, userLastName);
+            ps.setInt(3, userAge);
+            long result = ps.executeLargeUpdate();
+            ps.close();
+            connection.close();
+            return result;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public User findUserById(Long userId) throws SQLException {
@@ -43,6 +58,8 @@ public class SimpleJDBCRepository {
                 user.setFirstName(resultSet.getString(2));
                 user.setLastName(resultSet.getString(3));
                 user.setAge(resultSet.getInt(4));
+                ps.close();
+                connection.close();
                 return user;
             }
         } catch (SQLException e) {
@@ -63,6 +80,8 @@ public class SimpleJDBCRepository {
                 user.setFirstName(resultSet.getString(2));
                 user.setLastName(resultSet.getString(3));
                 user.setAge(resultSet.getInt(4));
+                ps.close();
+                connection.close();
                 return user;
             }
         } catch (SQLException e) {
@@ -84,6 +103,8 @@ public class SimpleJDBCRepository {
                 user.setLastName(resultSet.getString(3));
                 user.setAge(resultSet.getInt(4));
                 allUsers.add(user);
+                ps.close();
+                connection.close();
             }
             return allUsers;
         } catch (SQLException e) {
@@ -92,7 +113,29 @@ public class SimpleJDBCRepository {
     }
 
     public User updateUser() {
-        throw new UnsupportedOperationException("method isn't implemented");
+        try {
+            connection = CustomDataSource.getInstance().getConnection();
+            ps = connection.prepareStatement(updateUserSQL);
+            String firstName = "Ann";
+            String lastName = "Wood";
+            int age = 33;
+            long userId = 1;
+            ps.setString(1, firstName);
+            ps.setString(2, lastName);
+            ps.setInt(3, age);
+            ps.setLong(4, userId);
+            ResultSet resultSet = ps.executeQuery();
+            User updatedUser = new User();
+            updatedUser.setId(resultSet.getLong(1));
+            updatedUser.setFirstName(resultSet.getString(2));
+            updatedUser.setLastName(resultSet.getString(3));
+            updatedUser.setAge(resultSet.getInt(4));
+            ps.close();
+            connection.close();
+            return updatedUser;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void deleteUser(Long userId) {
@@ -101,6 +144,8 @@ public class SimpleJDBCRepository {
             ps = connection.prepareStatement(deleteUser);
             ps.setLong(1, userId);
             ps.execute();
+            ps.close();
+            connection.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

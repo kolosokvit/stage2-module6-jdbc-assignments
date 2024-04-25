@@ -33,7 +33,7 @@ public class CustomDataSource implements DataSource {
     public static CustomDataSource getInstance() {
         if (instance == null) {
             Properties properties = new Properties();
-            try (FileReader fileReader = new FileReader("/home/vitali/projects/mjc-school/stage2/stage2-module6-jdbc-assignments/src/main/resources/app.properties")) {
+            try (FileReader fileReader = new FileReader("src/main/resources/app.properties")) {
                 properties.load(fileReader);
                 String driver = properties.getProperty("postgres.driver");
                 String url = properties.getProperty("postgres.url");
