@@ -9,8 +9,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -41,54 +39,54 @@ public class CustomDataSource implements DataSource {
                 String name = properties.getProperty("postgres.name");
                 instance = new CustomDataSource(driver, url, password, name);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("Unable to load properties from app.properties file", e);
             }
         }
         return instance;
     }
 
     @Override
-    public Connection getConnection() throws SQLException {
+    public Connection getConnection() {
         return new CustomConnector().getConnection(url, name, password);
     }
 
     @Override
-    public Connection getConnection(String username, String password) throws SQLException {
+    public Connection getConnection(String username, String password) {
         return new CustomConnector().getConnection(url, username, password);
     }
 
     @Override
-    public PrintWriter getLogWriter() throws SQLException {
+    public PrintWriter getLogWriter() {
         throw new UnsupportedOperationException("Unsupported method 'getLogWriter()'");
     }
 
     @Override
-    public void setLogWriter(PrintWriter out) throws SQLException {
+    public void setLogWriter(PrintWriter out) {
         throw new UnsupportedOperationException("Unsupported method 'setLogWriter()'");
     }
 
     @Override
-    public void setLoginTimeout(int seconds) throws SQLException {
+    public void setLoginTimeout(int seconds) {
         throw new UnsupportedOperationException("Unsupported method 'setLoginTimeout()'");
     }
 
     @Override
-    public int getLoginTimeout() throws SQLException {
+    public int getLoginTimeout() {
         throw new UnsupportedOperationException("Unsupported method 'getLoginTimeout()'");
     }
 
     @Override
-    public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+    public Logger getParentLogger() {
         throw new UnsupportedOperationException("Unsupported method 'getParentLogger()'");
     }
 
     @Override
-    public <T> T unwrap(Class<T> iface) throws SQLException {
+    public <T> T unwrap(Class<T> iface) {
         throw new UnsupportedOperationException("Unsupported method 'unwrap()'");
     }
 
     @Override
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+    public boolean isWrapperFor(Class<?> iface) {
         throw new UnsupportedOperationException("Unsupported method 'isWrapperFor()'");
     }
 }
