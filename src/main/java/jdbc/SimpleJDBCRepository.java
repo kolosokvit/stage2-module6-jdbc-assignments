@@ -43,7 +43,7 @@ public class SimpleJDBCRepository {
         return affectedRows;
     }
 
-    public User findUserById(Long userId) throws SQLException {
+    public User findUserById(Long userId) {
         try (Connection connection = CustomDataSource.getInstance().getConnection();
         PreparedStatement ps = connection.prepareStatement(FIND_USER_BY_ID_SQL)){
             ps.setLong(1, userId);
@@ -59,10 +59,10 @@ public class SimpleJDBCRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        throw new SQLException("Can't find user with id = " + userId);
+        return null;
     }
 
-    public User findUserByName(String userName) throws SQLException {
+    public User findUserByName(String userName) {
         try (Connection connection = CustomDataSource.getInstance().getConnection();
         PreparedStatement ps = connection.prepareStatement(FIND_USER_BY_NAME_SQL)) {
             ps.setString(1, userName);
@@ -78,7 +78,7 @@ public class SimpleJDBCRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        throw new SQLException("Can't find user with name = " + userName);
+        return null;
     }
 
     public List<User> findAllUser() {
