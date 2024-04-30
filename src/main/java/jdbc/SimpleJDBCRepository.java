@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 public class SimpleJDBCRepository {
 
-    private Connection connection = CustomDataSource.getInstance().getConnection();
+    private Connection connection = null;
     private PreparedStatement ps = null;
     private Statement st = null;
 
@@ -32,7 +32,8 @@ public class SimpleJDBCRepository {
     public Long createUser(User user) {
         long affectedRows = 0L;
         try {
-            ps = connection.prepareStatement(CREATE_USER_SQL);
+            Connection connection = CustomDataSource.getInstance().getConnection();
+            PreparedStatement ps = connection.prepareStatement(CREATE_USER_SQL);
             ps.setString(1, user.getFirstName());
             ps.setString(2, user.getLastName());
             ps.setInt(3, user.getAge());
@@ -46,7 +47,8 @@ public class SimpleJDBCRepository {
 
     public User findUserById(Long userId) {
         try {
-            ps = connection.prepareStatement(FIND_USER_BY_ID_SQL);
+            Connection connection = CustomDataSource.getInstance().getConnection();
+            PreparedStatement ps = connection.prepareStatement(FIND_USER_BY_ID_SQL);
             ps.setLong(1, userId);
             ResultSet resultSet = ps.executeQuery();
             if (resultSet.next()) {
@@ -66,7 +68,8 @@ public class SimpleJDBCRepository {
 
     public User findUserByName(String userName) {
         try {
-            ps = connection.prepareStatement(FIND_USER_BY_NAME_SQL);
+            Connection connection = CustomDataSource.getInstance().getConnection();
+            PreparedStatement ps = connection.prepareStatement(FIND_USER_BY_NAME_SQL);
             ps.setString(1, userName);
             ResultSet resultSet = ps.executeQuery();
             if (resultSet.next()) {
@@ -86,7 +89,8 @@ public class SimpleJDBCRepository {
 
     public List<User> findAllUser() {
         try {
-            st = connection.createStatement();
+            Connection connection = CustomDataSource.getInstance().getConnection();
+            Statement st = connection.createStatement();
             ResultSet resultSet = st.executeQuery(FIND_ALL_USER_SQL);
             List<User> allUsers = new ArrayList<>();
             while (resultSet.next()) {
@@ -107,7 +111,8 @@ public class SimpleJDBCRepository {
     public User updateUser(User user) {
         User updatedUser = null;
         try {
-            ps  = connection.prepareStatement(UPDATE_USER_SQL);
+            Connection connection = CustomDataSource.getInstance().getConnection();
+            PreparedStatement ps  = connection.prepareStatement(UPDATE_USER_SQL);
             ps.setString(1, user.getFirstName());
             ps.setString(2, user.getLastName());
             ps.setInt(3, user.getAge());
@@ -128,7 +133,8 @@ public class SimpleJDBCRepository {
 
     public void deleteUser(Long userId) {
         try {
-            ps = connection.prepareStatement(DELETE_USER);
+            Connection connection = CustomDataSource.getInstance().getConnection();
+            PreparedStatement ps = connection.prepareStatement(DELETE_USER);
             ps.setLong(1, userId);
             ps.execute();
             ps.close();
