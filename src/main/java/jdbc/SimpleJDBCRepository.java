@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SimpleJDBCRepository {
-
+    private final CustomDataSource dataSource = CustomDataSource.getInstance();
     private Connection connection = null;
     private PreparedStatement ps = null;
     private Statement st = null;
@@ -32,7 +32,7 @@ public class SimpleJDBCRepository {
     public Long createUser(User user) {
         long affectedRows = 0L;
         try {
-            Connection connection = CustomDataSource.getInstance().getConnection();
+            Connection connection = dataSource.getConnection();
             PreparedStatement ps = connection.prepareStatement(CREATE_USER_SQL);
             ps.setString(1, user.getFirstName());
             ps.setString(2, user.getLastName());
