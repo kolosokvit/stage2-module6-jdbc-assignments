@@ -5,7 +5,6 @@ import javax.sql.DataSource;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -31,15 +30,16 @@ public class CustomDataSource implements DataSource {
     public static CustomDataSource getInstance() {
         if (instance == null) {
             Properties properties = new Properties();
-            try (FileReader fileReader = new FileReader("src/main/resources/app.properties")) {
-                properties.load(fileReader);
+            try {
+                properties.load(
+                        Thread.currentThread().getContextClassLoader().getResourceAsStream("app.properties"));
                 String driver = properties.getProperty("postgres.driver");
                 String url = properties.getProperty("postgres.url");
                 String password = properties.getProperty("postgres.password");
                 String name = properties.getProperty("postgres.name");
                 instance = new CustomDataSource(driver, url, password, name);
             } catch (IOException e) {
-                throw new RuntimeException("Unable to load properties from app.properties file", e);
+                e.printStackTrace();
             }
         }
         return instance;
