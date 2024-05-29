@@ -33,15 +33,16 @@ public class SimpleJDBCRepository {
         long id = 0L;
         try {
             connection = dataSource.getConnection();
-            ps = connection.prepareStatement(CREATE_USER_SQL);
+            ps = connection.prepareStatement(CREATE_USER_SQL, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, user.getFirstName());
             ps.setString(2, user.getLastName());
             ps.setInt(3, user.getAge());
             int affectedRows = ps.executeUpdate();
-            if (affectedRows > 0) {
+            System.out.println(affectedRows);
+            if (affectedRows > 0){
                 ResultSet resultSet = ps.getGeneratedKeys();
                 if (resultSet.next()) {
-                    id = resultSet.getLong(1);
+                    id = resultSet.getLong("id");
                 }
             }
             ps.close();
@@ -53,8 +54,8 @@ public class SimpleJDBCRepository {
 
     public User findUserById(Long userId) {
         try {
-            Connection connection = CustomDataSource.getInstance().getConnection();
-            PreparedStatement ps = connection.prepareStatement(FIND_USER_BY_ID_SQL);
+            connection = CustomDataSource.getInstance().getConnection();
+            ps = connection.prepareStatement(FIND_USER_BY_ID_SQL);
             ps.setLong(1, userId);
             ResultSet resultSet = ps.executeQuery();
             if (resultSet.next()) {
@@ -74,8 +75,8 @@ public class SimpleJDBCRepository {
 
     public User findUserByName(String userName) {
         try {
-            Connection connection = CustomDataSource.getInstance().getConnection();
-            PreparedStatement ps = connection.prepareStatement(FIND_USER_BY_NAME_SQL);
+            connection = CustomDataSource.getInstance().getConnection();
+            ps = connection.prepareStatement(FIND_USER_BY_NAME_SQL);
             ps.setString(1, userName);
             ResultSet resultSet = ps.executeQuery();
             if (resultSet.next()) {
@@ -95,8 +96,8 @@ public class SimpleJDBCRepository {
 
     public List<User> findAllUser() {
         try {
-            Connection connection = CustomDataSource.getInstance().getConnection();
-            Statement st = connection.createStatement();
+            connection = CustomDataSource.getInstance().getConnection();
+            st = connection.createStatement();
             ResultSet resultSet = st.executeQuery(FIND_ALL_USER_SQL);
             List<User> allUsers = new ArrayList<>();
             while (resultSet.next()) {
@@ -116,8 +117,8 @@ public class SimpleJDBCRepository {
 
     public User updateUser(User user) {
         try {
-            Connection connection = CustomDataSource.getInstance().getConnection();
-            PreparedStatement ps  = connection.prepareStatement(UPDATE_USER_SQL);
+            connection = CustomDataSource.getInstance().getConnection();
+            ps  = connection.prepareStatement(UPDATE_USER_SQL);
             ps.setString(1, user.getFirstName());
             ps.setString(2, user.getLastName());
             ps.setInt(3, user.getAge());
@@ -136,8 +137,8 @@ public class SimpleJDBCRepository {
 
     public void deleteUser(Long userId) {
         try {
-            Connection connection = CustomDataSource.getInstance().getConnection();
-            PreparedStatement ps = connection.prepareStatement(DELETE_USER);
+            connection = CustomDataSource.getInstance().getConnection();
+            ps = connection.prepareStatement(DELETE_USER);
             ps.setLong(1, userId);
             ps.execute();
             ps.close();
